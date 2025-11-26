@@ -11,8 +11,8 @@ global:
 replicaCount: 1
 
 image:
-  registry: gitlab.udevs.io:5050/
-  repository: ucode/ucode_react_transcoder_admin
+  registry: gitlab.udevs.io:5050
+  repository: /ucode/ucode_react_admin_transcoder
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -21,13 +21,13 @@ imagePullSecrets: "gitlab-registry"
 nameOverride: ""
 fullnameOverride: ""
 labels:
-  app: react_admin
+  app: ucode_react_admin_transcoder
 # command: ["/bin/sh","-c"]
 # args: ["echo 'consuming a message'; sleep 5"]
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
@@ -35,7 +35,7 @@ serviceAccount:
   name: "vault-auth"
 
 podLabels:
-  app: react_admin
+  app: ucode_react_admin_transcoder
 
 podSecurityContext:
   {}
@@ -85,17 +85,11 @@ ingress:
         nginx.ingress.kubernetes.io/proxy-body-size: "0"
         nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
         nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        acme.cert-manager.io/http01-edit-in-place: "true"
       type: web
       hosts:
-        - host: "transcoder.admin.u-code.io"
+        - host: "transcoder-admin.u-code.io"
           path: /
           servicePort: 80
-      tls:
-        - secretName: react-admin-transcoder-tls
-          hosts:
-            - "transcoder.admin.u-code.io"
 
 resources:
   {}
@@ -126,3 +120,4 @@ affinity:
               operator: In
               values:
                 - "ucode-prod"
+
